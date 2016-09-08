@@ -21,7 +21,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-uglify": "^2.0.0",
-    "jshint": "^2.9.3"
+    "jshint": "^2.9.3",
+    "orchestrator": "^0.3.7"
   },
   "dependencies": {
     "sass-mq": "^3.2.9"
