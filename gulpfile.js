@@ -16,7 +16,7 @@ var plumber     = require('gulp-plumber');
 gulp.task('browser-sync', ['sass', 'scripts'], function() {
     browserSync({
         server: {
-            baseDir: '_site'
+            baseDir: ''
         },
         open: false
     });
@@ -26,34 +26,32 @@ gulp.task('browser-sync', ['sass', 'scripts'], function() {
  * Compile files from _scss into both _site/css (for live injecting) and site (for future jekyll builds)
  */
 gulp.task('sass', function () {
-    return gulp.src('_scss/main.scss', { style: 'expanded' })
+    return gulp.src('src/scss/main.scss', { style: 'expanded' })
     .pipe(plumber())
     .pipe(sass())
     .pipe(autoprefixer({
             browsers: ['> 5%', 'last 2 versions', 'Firefox ESR', 'Safari >= 6', 'Opera 12.1'],
             cascade: false
         }))
-    .pipe(gulp.dest('css'))
+    .pipe(gulp.dest('dist/css'))
     .pipe(rename({suffix: '.min'}))
     .pipe(cssmin())
-    .pipe(gulp.dest('css'))
-    .pipe(gulp.dest('_site/css'))
-    .pipe(browserSync.reload({stream:true}))
+    .pipe(gulp.dest('dist/css'))
+    // .pipe(browserSync.reload({stream:true}))
     .pipe(notify({ message: 'Styles task complete' }));
 });
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return gulp.src('_js/*.js')
+    return gulp.src('src/js/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(concat('scripts.js'))
-    .pipe(gulp.dest('js'))
+    .pipe(gulp.dest('dist/js'))
     .pipe(rename({suffix: '.min'}))
     .pipe(uglify())
-    .pipe(gulp.dest('js'))
-    .pipe(gulp.dest('_site/js'))
-    .pipe(browserSync.reload({stream:true}))
+    .pipe(gulp.dest('dist/js'))
+    // .pipe(browserSync.reload({stream:true}))
     .pipe(notify({ message: 'Scripts task complete' }));
 });
 
@@ -62,8 +60,8 @@ gulp.task('scripts', function() {
  * Watch html/md files, run jekyll & reload BrowserSync
  */
 gulp.task('watch', function() {
-    gulp.watch('_scss/**/*.scss', ['sass']);
-    gulp.watch('_js/*.js', ['scripts']);
+    gulp.watch('src/scss/**/*.scss', ['sass']);
+    gulp.watch('src/js/*.js', ['scripts']);
     gulp.watch('*.html', ['browser-sync']);
 });
 
