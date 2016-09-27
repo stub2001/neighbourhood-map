@@ -1,0 +1,10 @@
+section.listLoc {
+	width:20%;
+	ul {
+		@extend .o-list-bare;
+
+		>* {
+			
+		}
+	}
+}
