@@ -9,18 +9,23 @@
  <body>
  <div class="fullWidth">
       <section class="listLoc">
-        <ul>
-          <li>item1</li>
-          <li>item2</li>
-          <li>item3</li>
+        <ul data-bind="foreach: markers()">
+          <li>
+            <a data-bind="text: title, click: $parent.locationSelect"></a>
+          </li>
         </ul>
       </section>
       <section class="map">
         <div id="map"></div>
       </section>
+      <section>
+      <div id="markersOffline"></div>
+      </section>
   </div>
+  
+<script type='text/javascript' src='knockout-3.4.0.js'></script>
+<script type="text/javascript" src="dist/js/scripts.js"></script>
 
-<script type="text/javascript" src="dist/js/scripts.min.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASN6QmxhT5b_0RfCd7xfK37nkFWQuy050&v=3&callback=initMap">
     </script>
