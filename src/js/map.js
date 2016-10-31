@@ -14,19 +14,35 @@ function initMap() {
     });
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
-    var locations = dataArray;
     var largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
-    // The following group uses the location array to create an array of markers on initialize.
+    getAllMarkers()
+    loadMarkers();
+}
+// This function will loop through the markers array and display them all.
+function loadMarkers() {
+    var bounds = new google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each marker and display the marker
+    for (var i = 0; i < markers().length; i++) {
+        markers()[i].setMap(map);
+        bounds.extend(markers()[i].position);
+    }
+    map.fitBounds(bounds);
+}
+
+// The following group uses the location array to create an array of markers on initialize.
+function getAllMarkers() {
+    var locations = dataArray;
     for (var i = 0; i < locations.length; i++) {
         // Get the position from the location array.
         var position = locations[i].location;
         var title = locations[i].title;
+        var genre = locations[i].genre;
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
-            map: map,
             position: position,
             title: title,
+            genre: genre,
             animation: google.maps.Animation.DROP,
             id: i
         });
@@ -37,12 +53,12 @@ function initMap() {
             populateInfoWindow(this, largeInfowindow);
             toggleBounce(this);
         });
-        bounds.extend(markers()[i].position);
+
     }
-    // Extend the boundaries of the map for each marker
-    map.fitBounds(bounds);
 }
 
+
+// Set animation 
 function toggleBounce(marker) {
     if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
@@ -66,13 +82,5 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
             infowindow.setMarker(null);
         });
-    }
-}
-
-function selectMarker(marker) {
-    for (var i = 0; i < markers.length; i++) {
-        if (marker.title == markers[i].title) {
-            //this is the marker on the map
-        }
     }
 }
