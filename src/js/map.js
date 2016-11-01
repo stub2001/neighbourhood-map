@@ -17,7 +17,7 @@ function initMap() {
     //var largeInfowindow = new google.maps.InfoWindow();
 
     var bounds = new google.maps.LatLngBounds();
-    getAllMarkers(dataArray)
+    getAllMarkers(dataArray);
     loadMarkers();
 }
 // This function will loop through the markers array and display them all.
