@@ -10,7 +10,7 @@
  <div class="fullWidth">
       <section class="listLoc">
         <ul data-bind="foreach: markers()">
-          <li>
+          <li data-bind="visible: markers().">
             <a data-bind="text: title, click: $parent.locationSelect"></a>
           </li>
         </ul>

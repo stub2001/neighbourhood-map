@@ -14,9 +14,10 @@ function initMap() {
     });
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
-    var largeInfowindow = new google.maps.InfoWindow();
+    //var largeInfowindow = new google.maps.InfoWindow();
+
     var bounds = new google.maps.LatLngBounds();
-    getAllMarkers()
+    getAllMarkers(dataArray)
     loadMarkers();
 }
 // This function will loop through the markers array and display them all.
@@ -30,9 +31,12 @@ function loadMarkers() {
     map.fitBounds(bounds);
 }
 
+function initInfoWindow() {
+    return new google.maps.InfoWindow();
+}
+
 // The following group uses the location array to create an array of markers on initialize.
-function getAllMarkers() {
-    var locations = dataArray;
+function getAllMarkers(locations) {
     for (var i = 0; i < locations.length; i++) {
         // Get the position from the location array.
         var position = locations[i].location;
@@ -46,11 +50,12 @@ function getAllMarkers() {
             animation: google.maps.Animation.DROP,
             id: i
         });
-        // Push the marker to our array of markers.
+        var infowindow = new google.maps.InfoWindow()
+            // Push the marker to our array of markers.
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
-            populateInfoWindow(this, largeInfowindow);
+            populateInfoWindow(this, infowindow);
             toggleBounce(this);
         });
 
@@ -80,7 +85,7 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function() {
-            infowindow.setMarker(null);
+            infowindow.marker = null;
         });
     }
 }

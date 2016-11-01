@@ -5,7 +5,7 @@ function ViewModel() {
     self.list = ko.observableArray(dataArray);
     self.currentFilter = ko.observable();
     self.locationSelect = function(loc) {
-        google.maps.event.trigger(markers()[loc.id], 'click');
+        google.maps.event.trigger(loc, 'click');
     };
 
 
@@ -16,22 +16,21 @@ function ViewModel() {
             return markers();
         } else {
             return ko.utils.arrayFilter(markers(), function(prod) {
-                return prod.genre == self.currentFilter();
+
+                if (prod.genre == !self.currentFilter()) {
+
+                    return prod.setMap(null);
+                    return prod.display = "hide";
+
+                }
+                //return prod.genre == self.currentFilter()
             });
         }
     });
 
 
     self.filter = function(genre) {
-
         self.currentFilter(genre);
-        //clears the markers on the map
-        setMapOnAll(null);
-        //updates the markers in the array to match the filter choice
-        //(this automatically refreshes the list as it's an observable)
-        markers(self.filterProducts());
-        //reloads the markers on map based on new array
-        setMapOnAll(map);
 
     }
 
@@ -43,9 +42,6 @@ function ViewModel() {
     }
 
     self.unfilter = function() {
-        markers.removeAll();
-        setMapOnAll(null);
-        getAllMarkers()
         setMapOnAll(map);
     }
 }
