@@ -2,6 +2,8 @@
 var map;
 // Create a new blank array for all the listing markers.
 var markers = ko.observableArray();
+// Create global var for infowindow
+var infowindow;
 
 function initMap() {
     // Constructor creates a new map - only center and zoom are required.
@@ -31,10 +33,6 @@ function loadMarkers() {
     map.fitBounds(bounds);
 }
 
-function initInfoWindow() {
-    return new google.maps.InfoWindow();
-}
-
 // The following group uses the location array to create an array of markers on initialize.
 function getAllMarkers(locations) {
     for (var i = 0; i < locations.length; i++) {
@@ -50,7 +48,8 @@ function getAllMarkers(locations) {
             animation: google.maps.Animation.DROP,
             id: i
         });
-        var infowindow = new google.maps.InfoWindow()
+
+        infowindow = new google.maps.InfoWindow()
             // Push the marker to our array of markers.
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.

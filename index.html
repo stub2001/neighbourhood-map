@@ -11,8 +11,8 @@
       <section class="listLoc">
       <select data-bind="options: filters, value: filter"></select>
         <ul data-bind="foreach: filteredItems">
-          <li data-bind="visible: $data.visible"><!--haven't quite worked out how to implement this yet-->
-          <a data-bind="text: title, click: $parent.locationSelect"></a>
+          <li>
+          <p data-bind="text: title, click: $parent.locationSelect"></p>
         </li>
       </ul>
     </section>

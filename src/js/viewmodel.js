@@ -6,29 +6,30 @@ function ViewModel() {
     self.currentFilter = ko.observable();
     self.filters = ko.observableArray([0, 1]);
     self.filter = ko.observable('');
+
     self.locationSelect = function(loc) {
         google.maps.event.trigger(loc, 'click');
     };
 
-
     self.filteredItems = ko.computed(function() {
         var filter = self.filter();
         if (!filter || filter == 0) {
+            // SHOW ALL MARKERS WHEN FILTER RESETS
+            markers().forEach(function(marker) {
+                marker.setVisible(true);
+            });
             return markers();
+
         } else {
             return ko.utils.arrayFilter(markers(), function(i) {
-                //console.log(i.genre == filter);
-                //return i.genre == filter
-                if (i.genre == filter) {
-                    console.log(i);
-                    return i.setMap(null);
-                }
-
+                // CREATE MATCH VARIABLE TO USE TO SET MARKER VISIBILITY
+                var match = i.genre == filter;
+                i.setVisible(match);
+                return match;
 
             });
         }
     });
-
 
 }
 
