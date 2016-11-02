@@ -4,46 +4,32 @@ function ViewModel() {
     var self = this;
     self.list = ko.observableArray(dataArray);
     self.currentFilter = ko.observable();
+    self.filters = ko.observableArray([0, 1]);
+    self.filter = ko.observable('');
     self.locationSelect = function(loc) {
         google.maps.event.trigger(loc, 'click');
     };
 
 
-    self.filterProducts = ko.computed(function() {
-
-        if (!self.currentFilter()) {
-            //console.log('nofilter');
+    self.filteredItems = ko.computed(function() {
+        var filter = self.filter();
+        if (!filter || filter == 0) {
             return markers();
         } else {
-            return ko.utils.arrayFilter(markers(), function(prod) {
-
-                if (prod.genre == !self.currentFilter()) {
-
-                    return prod.setMap(null);
-                    return prod.display = "hide";
-
+            return ko.utils.arrayFilter(markers(), function(i) {
+                //console.log(i.genre == filter);
+                //return i.genre == filter
+                if (i.genre == filter) {
+                    console.log(i);
+                    return i.setMap(null);
                 }
-                //return prod.genre == self.currentFilter()
+
+
             });
         }
     });
 
 
-    self.filter = function(genre) {
-        self.currentFilter(genre);
-
-    }
-
-    // Sets the map on all markers in the array.
-    function setMapOnAll(map) {
-        for (var i = 0; i < markers().length; i++) {
-            markers()[i].setMap(map);
-        }
-    }
-
-    self.unfilter = function() {
-        setMapOnAll(map);
-    }
 }
 
 
