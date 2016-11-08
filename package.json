@@ -1,32 +1,31 @@
 {
-    "name": "neighbourhood-map",
-    "version": "1.0.0",
-    "description": "A map for showing locations and displaying data. Uses google maps API, MVVM principles with Knockout.js and general all round good stuff.",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "browser-sync": "^2.15.0",
-        "child_process": "^1.0.2",
-        "gulp": "^3.9.1",
-        "gulp-autoprefixer": "^3.1.1",
-        "gulp-concat": "^2.6.0",
-        "gulp-cssmin": "^0.1.7",
-        "gulp-jshint": "^2.0.1",
-        "gulp-notify": "^2.2.0",
-        "gulp-plumber": "^1.1.0",
-        "gulp-rename": "^1.2.2",
-        "gulp-sass": "^2.3.2",
-        "gulp-sourcemaps": "^2.2.0",
-        "gulp-uglify": "^2.0.0",
-        "jshint": "^2.9.3",
-        "orchestrator": "^0.3.7",
-        "sass-mq": "^3.2.9"
-    },
-    "dependencies": {
-
-    }
+  "name": "neighbourhood-map",
+  "version": "1.0.0",
+  "description": "A map for showing locations and displaying data. Uses google maps API, MVVM principles with Knockout.js and general all round good stuff.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.15.0",
+    "child_process": "^1.0.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssmin": "^0.1.7",
+    "gulp-jshint": "^2.0.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^2.2.0",
+    "gulp-uglify": "^2.0.0",
+    "inuitcss": "^6.0.0-beta.4",
+    "jshint": "^2.9.3",
+    "orchestrator": "^0.3.7",
+    "sass-mq": "^3.2.9"
+  },
+  "dependencies": {}
 }

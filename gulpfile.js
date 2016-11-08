@@ -58,8 +58,8 @@ gulp.task('scripts', function() {
     return gulp.src('src/js/*.js')
         .pipe(sourcemaps.init())
         .pipe(plumber())
-        // .pipe(jshint())
-        // .pipe(jshint.reporter('default'))
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
         .pipe(concat('scripts.js'))
         .pipe(gulp.dest('dist/js'))
         .pipe(rename({

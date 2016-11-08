@@ -3,31 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0">
-    <title>Site Template</title>
+    <title>Neighbourhood map</title>
     <link rel="stylesheet" type="text/css" href="dist/css/main.css">
   </head>
   <body>
-    <div class="fullWidth">
-      <section class="listLoc">
+    <div class="o-layout">
+      <section class="o-layout__item u-1/1 u-1/5@tablet">
+      Filter:
       <select data-bind="options: filters, value: filter"></select>
-        <ul data-bind="foreach: filteredItems">
-          <li>
+      <ul data-bind="foreach: filteredItems">
+        <li>
           <p data-bind="text: title, click: $parent.locationSelect"></p>
         </li>
       </ul>
     </section>
-    <section class="map">
+    <section class="o-layout__item u-1/1 u-4/5@tablet">
       <div id="map"></div>
     </section>
-    <section>
-      <div id="markersOffline"></div>
-    </section>
-  </div>
-  
-  <script type='text/javascript' src='knockout-3.4.0.js'></script>
-  <script type="text/javascript" src="dist/js/scripts.min.js"></script>
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASN6QmxhT5b_0RfCd7xfK37nkFWQuy050&v=3&callback=initMap">
-  </script>
-</body>
+    </div><!-- end /o-layout -->
+    
+    
+    <script type='text/javascript' src='knockout-3.4.0.js'></script>
+    <script type='text/javascript' src='jquery.min.js'></script>
+    <script type="text/javascript" src="dist/js/scripts.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASN6QmxhT5b_0RfCd7xfK37nkFWQuy050&v=3&callback=initMap"></script>
+  </body>
 </html>
