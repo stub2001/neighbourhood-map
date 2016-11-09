@@ -14,7 +14,7 @@ function ViewModel() {
 
     self.filteredItems = ko.computed(function() {
         var filter = self.filter();
-        if (!filter || filter == 0) {
+        if (!filter || filter === 0) {
 
             // SHOW ALL MARKERS WHEN FILTER RESETS
             markers().forEach(function(marker) {

@@ -41,6 +41,9 @@ var dataArray = [{
     },
     genre: '0'
 }];
+function googleError() {
+    alert('cannot load Google Map');
+}
 // Create a map variable
 var map;
 // Create a new blank array for all the listing markers.
@@ -50,30 +53,30 @@ var infowindow;
 
 initMap = function() {
 
-        // Constructor creates a new map - only center and zoom are required.
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: 40.7413549,
-                lng: -73.9980244
-            },
-            zoom: 13
-        });
-        // These are the real estate listings that will be shown to the user.
-        // Normally we'd have these in a database instead.
-        //var largeInfowindow = new google.maps.InfoWindow();
+    // Constructor creates a new map - only center and zoom are required.
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+            lat: 40.7413549,
+            lng: -73.9980244
+        },
+        zoom: 13
+    });
+    // These are the real estate listings that will be shown to the user.
+    // Normally we'd have these in a database instead.
+    //var largeInfowindow = new google.maps.InfoWindow();
 
-        var bounds = new google.maps.LatLngBounds();
-        getAllMarkers(dataArray);
-        loadMarkers();
-    }
-    // This function will loop through the markers array and display them all.
+    var bounds = new google.maps.LatLngBounds();
+    getAllMarkers(dataArray);
+    loadMarkers();
+};
+// This function will loop through the markers array and display them all.
 function loadMarkers() {
     var bounds = new google.maps.LatLngBounds();
     // Extend the boundaries of the map for each marker and display the marker
-    for (var i = 0; i < markers().length; i++) {
-        markers()[i].setMap(map);
-        bounds.extend(markers()[i].position);
-    }
+    markers().forEach(function(marker) {
+        marker.setMap(map);
+        bounds.extend(marker.position);
+    });
     map.fitBounds(bounds);
 }
 
@@ -84,23 +87,27 @@ function getAllMarkers(locations) {
         var position = locations[i].location;
         var title = locations[i].title;
         var genre = locations[i].genre;
+        var content = locations[i].ajaxContent = ko.observable('pending search...');
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
             position: position,
             title: title,
             genre: genre,
+            ajaxContent: content,
             animation: google.maps.Animation.DROP,
             id: i
         });
 
         infowindow = new google.maps.InfoWindow();
-        getFS(marker);
+
         // Push the marker to our array of markers.
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
+            getFS(this);
             populateInfoWindow(this, infowindow);
             toggleBounce(this);
+
         });
 
     }
@@ -131,8 +138,9 @@ function getFS(marker) {
             marker.rating = 'No rating in foursquare';
         }
 
-        marker.content = '<br><div class="labels">' + '<div class="title">' + marker.title +
+        var content = '<br><div class="labels">' + '<div class="title">' + marker.title +
             '</div><div class="rating">Foursquare rating: ' + marker.rating + '</div>' + '</div>';
+        marker.ajaxContent(content);
 
     }).fail(function(err) {
 
@@ -151,7 +159,7 @@ function toggleBounce(marker) {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function() {
             marker.setAnimation(null);
-        }, 750);
+        }, 700);
     }
 }
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -161,7 +169,7 @@ function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
-        infowindow.setContent('<div>' + marker.content + '</div>');
+        infowindow.setContent('<div>' + marker.ajaxContent() + '</div>');
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function() {
@@ -185,7 +193,7 @@ function ViewModel() {
 
     self.filteredItems = ko.computed(function() {
         var filter = self.filter();
-        if (!filter || filter == 0) {
+        if (!filter || filter === 0) {
 
             // SHOW ALL MARKERS WHEN FILTER RESETS
             markers().forEach(function(marker) {
