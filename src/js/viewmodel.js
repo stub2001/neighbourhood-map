@@ -5,16 +5,17 @@ function ViewModel() {
 
     self.list = ko.observableArray(dataArray);
     self.currentFilter = ko.observable();
-    self.filters = ko.observableArray([0, 1]);
+    self.filters = ko.observableArray(['filter 0', 'filter 1']);
     self.filter = ko.observable('');
 
     self.locationSelect = function(loc) {
         google.maps.event.trigger(loc, 'click');
     };
 
+
     self.filteredItems = ko.computed(function() {
         var filter = self.filter();
-        if (!filter || filter === 0) {
+        if (!filter || filter === 'filter 0') {
 
             // SHOW ALL MARKERS WHEN FILTER RESETS
             markers().forEach(function(marker) {

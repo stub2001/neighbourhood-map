@@ -4,42 +4,42 @@ var dataArray = [{
         lat: 40.7713024,
         lng: -73.9632393
     },
-    genre: '1'
+    genre: 'filter 1'
 }, {
     title: 'Chelsea Loft',
     location: {
         lat: 40.7444883,
         lng: -73.9949465
     },
-    genre: '0'
+    genre: 'filter 0'
 }, {
     title: 'Union Square Open Floor Plan',
     location: {
         lat: 40.7347062,
         lng: -73.9895759
     },
-    genre: '1'
+    genre: 'filter 1'
 }, {
     title: 'East Village Hip Studio',
     location: {
         lat: 40.7281777,
         lng: -73.984377
     },
-    genre: '0'
+    genre: 'filter 0'
 }, {
     title: 'TriBeCa Artsy Bachelor Pad',
     location: {
         lat: 40.7195264,
         lng: -74.0089934
     },
-    genre: '1'
+    genre: 'filter 1'
 }, {
     title: 'Chinatown Homey Space',
     location: {
         lat: 40.7180628,
         lng: -73.9961237
     },
-    genre: '0'
+    genre: 'filter 0'
 }];
 function googleError() {
     alert('cannot load Google Map');
@@ -104,9 +104,9 @@ function getAllMarkers(locations) {
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
-            getFS(this);
-            populateInfoWindow(this, infowindow);
-            toggleBounce(this);
+            var marker = this;
+            populateInfoWindow(marker, infowindow);
+            toggleBounce(marker);
 
         });
 
@@ -114,40 +114,53 @@ function getAllMarkers(locations) {
 }
 // console.log(markers());
 
-function getFS(marker) {
-    // BEGIN FOURSQUARE AJAX INIT
-    var url = "https://api.foursquare.com/v2/venues/explore";
-    //foursquare client ID
-    var idFSq = 'CAD3EEXMNHQFJ4HD215D4EA0KB10WHQGXSRQCV2LFOGFSFCF';
-    //foursquare client Secret
-    var secretFsq = 'WN4UXNSSMR25SNOMT5VCEBWVVONFQ4HUBGQZZ3DLDI1T5O5F';
-    //console.log(marker.position);
-    $.ajax({
-        url: url,
-        dataType: 'json',
-        data: "limit=1&ll=" + marker.position.lat() + "," + marker.position.lng() + "&query=" + marker.title + "&" + "client_id=" + idFSq +
-            "&client_secret=" + secretFsq + "&v=20161106&m=foursquare",
-        method: 'GET',
-        async: true,
-    }).done(function(result) {
+function populateInfoWindow(marker, infowindow) {
+    //if marker.ajaxContent is set to the standard value, init the ajax call to go and update the infowindow content
+    //once ajax.content is set, just show the already existing content, no need to go and get ajax content again
+    if (marker.ajaxContent() === "pending search...") {
+        infowindow.setContent(marker.ajaxContent());
+        infowindow.open(map, marker);
+        // BEGIN FOURSQUARE AJAX INIT
+        var url = "https://api.foursquare.com/v2/venues/explore";
+        //foursquare client ID
+        var idFSq = 'CAD3EEXMNHQFJ4HD215D4EA0KB10WHQGXSRQCV2LFOGFSFCF';
+        //foursquare client Secret
+        var secretFsq = 'WN4UXNSSMR25SNOMT5VCEBWVVONFQ4HUBGQZZ3DLDI1T5O5F';
+        //console.log(marker.position);
+        //if statement  - if infor has already been retrieved, do ajax call, otherwise open the already existing infowindow.
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            data: "limit=1&ll=" + marker.position.lat() + "," + marker.position.lng() + "&query=" + marker.title + "&" + "client_id=" + idFSq +
+                "&client_secret=" + secretFsq + "&v=20161106&m=foursquare",
+            method: 'GET',
+            async: true,
+        }).done(function(result) {
 
-        //callback function if succes - Will add the rating received from foursquare to the content of the info window
-        marker.rating = result.response.groups[0].items[0].venue.rating;
+            // TODO: callback function if succes - Will add the rating received from foursquare to the content of the info window
+            marker.rating = result.response.groups[0].items[0].venue.rating;
 
-        if (!marker.rating) {
-            marker.rating = 'No rating in foursquare';
-        }
+            if (!marker.rating) {
+                marker.rating = 'No rating in foursquare';
+            }
 
-        var content = '<br><div class="labels">' + '<div class="title">' + marker.title +
-            '</div><div class="rating">Foursquare rating: ' + marker.rating + '</div>' + '</div>';
-        marker.ajaxContent(content);
+            var content = '<br><div class="labels">' + '<div class="title">' + marker.title +
+                '</div><div class="rating">Foursquare rating: ' + marker.rating + '</div>' + '</div>';
+            marker.ajaxContent(content);
+            infowindow.setContent(marker.ajaxContent());
 
-    }).fail(function(err) {
+        }).fail(function(err) {
+            infowindow.setContent(marker.ajaxContent("Could not load data from foursquare!"));
+            //alert("Could not load data from foursquare!");
+        });
 
-        alert("Could not load data from foursquare!");
-    });
+        // END FOURSQUARE AJAX
 
-    // END FOURSQUARE AJAX
+    } else {
+        infowindow.setContent(marker.ajaxContent());
+        infowindow.open(map, marker);
+    }
+
 }
 
 
@@ -162,21 +175,6 @@ function toggleBounce(marker) {
         }, 700);
     }
 }
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
-function populateInfoWindow(marker, infowindow) {
-    // Check to make sure the infowindow is not already opened on this marker.
-    if (infowindow.marker != marker) {
-        infowindow.marker = marker;
-        infowindow.setContent('<div>' + marker.ajaxContent() + '</div>');
-        infowindow.open(map, marker);
-        // Make sure the marker property is cleared if the infowindow is closed.
-        infowindow.addListener('closeclick', function() {
-            infowindow.marker = null;
-        });
-    }
-}
 //ViewModel
 
 function ViewModel() {
@@ -184,16 +182,17 @@ function ViewModel() {
 
     self.list = ko.observableArray(dataArray);
     self.currentFilter = ko.observable();
-    self.filters = ko.observableArray([0, 1]);
+    self.filters = ko.observableArray(['filter 0', 'filter 1']);
     self.filter = ko.observable('');
 
     self.locationSelect = function(loc) {
         google.maps.event.trigger(loc, 'click');
     };
 
+
     self.filteredItems = ko.computed(function() {
         var filter = self.filter();
-        if (!filter || filter === 0) {
+        if (!filter || filter === 'filter 0') {
 
             // SHOW ALL MARKERS WHEN FILTER RESETS
             markers().forEach(function(marker) {
