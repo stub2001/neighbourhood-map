@@ -107,8 +107,9 @@ function populateInfoWindow(marker, infowindow) {
             infowindow.setContent(marker.ajaxContent());
 
         }).fail(function(err) {
-            infowindow.setContent(marker.ajaxContent("Could not load data from foursquare!"));
-            //alert("Could not load data from foursquare!");
+
+            //infowindow.setContent(marker.ajaxContent("Could not load data from foursquare!"));
+            alert("Could not load data from foursquare!");
         });
 
         // END FOURSQUARE AJAX
